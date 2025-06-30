@@ -1,0 +1,551 @@
+# RailCare Unified Services Portal
+
+## 1. Overview
+
+RailCare’s web portal is the single point of access for all stakeholders—passengers, volunteers/NGOs, station staff, and administrators. It seamlessly integrates eight core modules (CrowdFlow, MediLink, InfoReach, SafeHer, HomeID, FlexiFare, SafeServe, and TrackGuard) into a unified dashboard that provides real-time insights, actionable alerts, and direct interaction with each service.
+
+## 1.1 Authentication & Onboarding
+
+All users register and log in via their **Aadhaar card number** (or alternate government ID for non-Aadhaar holders). The portal uses Aadhaar-based OTP verification and e-KYC for identity assurance.
+
+* **Sign Up Flow:**
+
+  1. Enter Aadhaar number on signup page.
+  2. Receive OTP on the registered mobile number linked to Aadhaar.
+  3. Verify OTP to complete registration; user profile is auto-populated with name, photo (optional), and region.
+  4. Assign role-based permissions (Passenger, Volunteer, Staff, Admin) via admin approval for staff/volunteers.
+
+* **Login Flow:**
+
+  1. Enter Aadhaar number and request OTP.
+  2. Verify OTP to access dashboard.
+  3. For returning users, optional biometric authentication (fingerprint/face scan) via WebAuthn on supported devices.
+
+* **Security Measures:**
+
+  * Aadhaar data is transmitted via secure, TLS-encrypted channels.
+  * All personal data is stored encrypted at rest using AES-256.
+  * Role-based access control (RBAC) enforced via OAuth2/JWT tokens.
+
+---
+
+## 2. User Roles & Permissions
+
+| Role               | Key Capabilities                                                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Passenger**      | View live crowd maps; request emergency help (medical, safety); manage tickets; scan QR for food/water QC; access train info via SMS/IVR links |
+| **Volunteer/NGO**  | Onboard platform dwellers; schedule and confirm escort services; conduct tele-health sessions; record case notes                               |
+| **Station Staff**  | Monitor station crowd levels; triage MediLink alerts; manage kiosk syncs; override vendor QC statuses; review CCTV incidents                   |
+| **Admin/Operator** | Configure modules; assign roles; view global KPI dashboards; audit logs (blockchain & event bus); manage system health & scaling               |
+
+---
+
+## 3. Unified Dashboard & Navigation
+
+RailCare’s dashboard serves as the nerve center—providing unified visibility, control, and interactions across all modules. It adapts dynamically based on user role, device, and context, ensuring that each stakeholder sees exactly the information and actions they need.
+
+### 3.1 Key Layout & Navigation Patterns
+
+* **Responsive Sidebar Navigation**
+
+  * **Module Tabs:** Icons and labels for CrowdFlow, MediLink, InfoReach, SafeHer, HomeID, FlexiFare, SafeServe, and TrackGuard.
+  * **Role-Specific Items:** Passengers see only CrowdFlow and InfoReach; staff see MediLink, SafeServe, and TrackGuard; admins see all modules and system settings.
+  * **Collapsible Groups:** Group related modules (e.g., Safety: SafeHer + TrackGuard) under expandable headings.
+
+* **Top Action Bar**
+
+  * **Global Search:** Query by train number, PNR, passenger ID, or case ID across modules.
+  * **Notifications & Alerts:** Bell icon shows high-priority incidents; colored indicator communicates severity.
+  * **User Profile & Quick Settings:** Access to language switch, 2FA prompts, and logout.
+
+### 3.2 Dashboard Components
+
+| Component              | Description                                                                                              | Use Cases                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Global Map View**    | Full-screen Leaflet map with layered heatmaps, alert markers, and live train icons.                      | Visualize crowd surges (CrowdFlow), active emergencies (MediLink), and high-risk zones (TrackGuard).      |
+| **Module Cards Panel** | Grid of cards—each card displays a key metric, sparkline chart, and one-click action button.             | E.g., CrowdFlow card shows current load %, MediLink card shows pending SOS count, SafeServe shows alerts. |
+| **Alerts Timeline**    | Chronological feed showing timestamped incidents across modules; filterable by date, type, and severity. | Track intrusion warnings, delay broadcasts, panic-button triggers.                                        |
+| **Quick Actions Menu** | Context-aware floating action button offering module-specific quick tasks (e.g., Raise SOS, Scan QR).    | Simplifies common tasks for all roles.                                                                    |
+| **Insights Carousel**  | Rotating panel showing KPIs, trend graphs, and system health indicators—updated hourly.                  | Admins track adoption rates, incident reduction, and service uptime.                                      |
+
+### 3.3 Interaction Flows
+
+1. **Incident Drill-Down**
+
+   * User clicks an alert marker on the Global Map → map zooms to location → side panel slides in with full incident detail and recommended actions (e.g., dispatch EMS, send crowd alert).
+
+2. **Cross-Module Context Linking**
+
+   * From a MediLink emergency card, user can click “View Crowd Context” to overlay CrowdFlow density data at the same station, helping staff allocate resources.
+
+3. **Task Delegation & Handoff**
+
+   * Station staff assign volunteer escorts by dragging volunteer avatars onto map markers; assignments sync instantly to volunteer mobile apps.
+
+4. **Adaptive PWA Experience**
+
+   * On low-bandwidth connections, dashboard strips non-essential visuals, caches last-known data, and indicates offline mode—enabling continuous operation in rural kiosks.
+
+### 3.4 Theming & Accessibility
+
+* **Customizable Themes:** Light/dark modes; high-contrast palette for low-vision users.
+* **Keyboard & Screen-Reader Support:** Full navigation via keyboard shortcuts; ARIA labels on all interactive components.
+* **Localization:** UI text and data formats adapt to selected language and regional settings.
+
+---
+
+## 4. Detailed Module Descriptions
+
+### 4.1 CrowdFlow (Overcrowding Crisis Management)
+
+**Purpose:** Continuously monitor and proactively manage passenger density across stations and coaches, preventing dangerous overcrowding and optimizing commuter flow.
+
+**Key Services & UI Components:**
+
+1. **Real-time Heatmap & Dashboard Widget**
+
+   * **Visualization:** Uses Leaflet overlay on station floorplans and coach schematics to color-code density (green: <60%, yellow: 60–85%, red: >85%).
+   * **Interaction:** Hover or tap on any zone displays live numeric occupancy, capacity thresholds, and historical trends.
+
+2. **Forecast Timeline & What-If Simulator**
+
+   * **AI Forecast Chart:** Plots predicted density for the next 60 minutes at 5‑minute intervals, powered by a time-series model trained on historical sensor and ticket data.
+   * **What-If Scenarios:** Staff can simulate effects of closing entry gates, rerouting flows, or adding temporary coaches to see projected density changes in real time.
+
+3. **Automated Alert Engine**
+
+   * **Threshold Rules:** Configurable per station and per train, e.g., trigger at 75% for warnings and 90% for critical alerts.
+   * **Notification Channels:**
+
+     * **Passenger App Push/SMS:** Segmented broadcasting to users within affected stations or upcoming trains.
+     * **Station Signage API:** Sends text and color codes to digital display panels on platforms and concourses.
+     * **PA Announcements:** Automated voice message templates triggered when critical threshold breached.
+
+4. **Staff Control Panel & Manual Overrides**
+
+   * **Gate Management:** Virtual controls to temporarily halt or resume entry via turnstile integration.
+   * **Flow Redirection:** Map-based UI allows staff to draw alternative routes with pop-up instructions for passengers and station guards.
+
+5. **User Subscription & Personalized Alerts**
+
+   * **Opt-In Preferences:** Passengers select stations or routes to follow; set personal thresholds for alerts (e.g., notify at >70%).
+   * **Language & Channel Settings:** Choose SMS, in-app, or email; multilingual support for top five regional languages.
+
+**Data Sources & Integration:**
+
+* **IoT Load Sensors:** Installed in ceilings and coach doors, reporting occupancy counts via MQTT to the Kafka bus.
+* **Ticketing API:** IRCTC real-time booking counts for unreserved and reserved classes.
+* **Mobile Check-Ins:** App-based geofenced ‘enter’/‘exit’ taps for crowdsourced accuracy.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Edge
+    Sensors[IoT Sensors & BLE Beacons]
+    Signs[Digital Signage]
+  end
+  Sensors -->|MQTT| Kafka
+  Tickets[IRCTC API] -->|REST| Kafka
+  Mobile[App Check-Ins] -->|gRPC| Kafka
+  Kafka --> Analytics[Stream Processing & AI Forecast]
+  Analytics --> DB[(PostgreSQL+PostGIS)]
+  Analytics -->|WebSocket| Frontend[React Dashboard]
+  Frontend -->|REST| ControlPanel[Staff UI]
+  Analytics --> SignageAPI[Signage & PA]
+```
+
+**Implementation Considerations:**
+
+* **Latency:** Edge preprocessing on sensors to aggregate counts every 5 seconds minimizes network chatter.
+* **Scalability:** Kubernetes autoscaling on analytics microservice ensures throughput during peak hours.
+* **Resilience:** Local fallback on station kiosks showing last-known good state for up to 15 minutes without connectivity.
+
+**Success Indicators:**
+
+* Reduction in peak density events (>90%) by at least 60%.
+* Average passenger wait times at entry gates reduced by 40%.
+* User opt-in rate > 70% among regular commuters after three months.
+
+---
+
+### 4.2 MediLink (Rural Medical Emergency Response)
+
+**Purpose:** Deliver rapid, on-train medical assistance and seamless coordination with healthcare facilities to drastically reduce response times and improve patient outcomes during emergencies.
+
+**Key Services & UI Components:**
+
+1. **Emergency SOS Hub**
+
+   * **Trigger Options:** In-app SOS button, conductor panel, and emergency call point on coaches.
+   * **Incident Card:** Displays patient name (optional), exact coach and berth number, emergency type, and timestamp.
+
+2. **Geo-Fenced Hospital Connector**
+
+   * **Nearest Facility Finder:** Auto-detects closest qualified hospitals based on real-time train GPS and road connectivity.
+   * **Dispatch Interface:** One-click dispatch to local EMS and ambulance services, with ETA and incident details.
+
+3. **Tele-Consultation Dashboard**
+
+   * **Vitals Overlay:** Live stream from onboard diagnostic sensors (ECG waveform, SPO₂, pulse rate, body temperature) overlaid on video feed.
+   * **Doctor Panel:** Secure video call with remote physicians, integrated chat for patient history and medication instructions.
+
+4. **Coach Re-Prioritization Planner**
+
+   * **Reorder Suggestions:** Algorithmic recommendations to shuffle coach sequence at next major junction, ensuring the medical coach rides adjacent to the emergency coach.
+   * **Operational Alerts:** Automated messages to station staff and yard operators with reconfiguration instructions.
+
+5. **Resource & Inventory Tracker**
+
+   * **Medical Kit Dashboard:** Real-time stock levels of critical supplies (defibrillator, oxygen cylinder, first-aid kit) across all medical coaches.
+   * **Auto-Replenishment Alerts:** Sends procurement notifications when supplies dip below threshold.
+
+**Data Sources & Integration:**
+
+* **GPS & Telematics:** Continuous train location via onboard GPS units.
+* **Onboard Sensor Suite:** Wearable or fixed sensors for vital signs, connected via Bluetooth/Wi-Fi.
+* **Hospital API:** Real-time bed and ambulance availability feeds from partner facilities.
+* **Railway Operations API:** Coach composition and yard scheduling data.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Onboard
+    Sensors[Diagnostic Sensors]
+    Tablet[Telemedicine Tablet]
+    GPS[GPS Module]
+  end
+  Sensors -->|BLE/Wi-Fi| Tablet
+  GPS -->|NMEA| Tablet
+  Tablet -->|WebRTC| Doctor[Remote Physician]
+  Tablet -->|REST| BackendAPI[RailCare MediLink Service]
+  BackendAPI --> GIS[Geospatial Service]
+  GIS --> Hospitals[Hospital Registry & EMS]
+  BackendAPI --> DB[(PostgreSQL)]
+  BackendAPI --> Dispatch[EMS Dispatch Engine]
+```
+
+**Implementation Considerations:**
+
+* **Connectivity:** Hybrid offline/online mode—store-and-forward of sensor data when network drops, prioritized sync upon reconnection.
+* **Privacy & Compliance:** HIPAA-equivalent encryption standards for patient data; secure consent workflows.
+* **Scalability:** Containerized microservices with auto-scaling based on event load.
+
+**Success Indicators:**
+
+* **Average Response Time:** Time from SOS trigger to first medical contact < 5 minutes.
+* **Survival & Recovery Rates:** Percentage of emergencies resulting in positive patient outcomes > 90%.
+* **Utilization Metrics:** Number of tele-consults per month; ambulance dispatch accuracy > 95%.
+
+---
+
+### 4.3 InfoReach (Information Blackout for Stranded Passengers)
+
+**Purpose:** Ensure uninterrupted access to train schedules, delay notifications, and critical travel advisories for passengers in low- or no-connectivity zones.
+
+**Key Services & UI Components:**
+
+1. **SMS Notification Service**
+
+   * **Scheduled Alerts:** Daily and journey-specific schedule updates pushed at key milestones (pre-departure, en route, station arrival).
+   * **Event-Triggered Broadcasts:** Automated SMS alerts on unplanned delays, platform changes, and cancellations; supports templated messages in multiple languages.
+
+2. **Interactive IVR Hotline**
+
+   * **Quick-Dial Shortcode:** Passengers dial a simple number (e.g., 555) from any phone to access train status.
+   * **Voice Prompts:** Multilingual menu prompts (audio) for selecting train number or PNR; retrieves real-time position and expected deviations.
+
+3. **Offline-Capable Station Kiosks**
+
+   * **Progressive Web App:** Touchscreen interface with cached timetable data, live status once connected, and offline fallback UI showing last sync.
+   * **Multi-Script Support:** UI and font rendering for Devanagari, Kannada, Tamil, Telugu, Bengali, Gujarati, and Odia.
+
+4. **Mobile App Integration**
+
+   * **Lightweight PWA Mode:** Auto-switch to low-data view when connectivity dips below threshold; supports background sync for updates.
+   * **Local Caching:** Stores latest train data for up to 24 hours; diff-only sync reduces data usage.
+
+5. **Community Info Beacons**
+
+   * **Bluetooth BLE Beacons:** Station-mounted beacons broadcast status packets to nearby devices, triggering on-device notifications without internet.
+   * **Beacon Manager:** Staff UI to update beacon data cache manually if connectivity is lost.
+
+**Data Sources & Integration:**
+
+* **IRCTC Live Status API:** Primary feed for train positions and delay metrics.
+* **GSM Network Gateway:** Local telecom integration for SMS and IVR delivery with priority routing.
+* **Station Sync Service:** Scheduler daemon that pulls fresh data every 5 minutes when network is available.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Cloud
+    IRCTC[IRCTC Live Status]
+    SmsGW[SMS Gateway]
+    IVR[IVR Switch]
+    BeaconAPI[BLE Beacon Manager]
+    SyncCron[Station Sync Service]
+  end
+  IRCTC -->|REST| Backend[InfoReach Service]
+  Backend -->|SMS| SmsGW
+  Backend -->|SIP| IVR
+  Backend -->|BLE| BeaconAPI
+  SyncCron -->|REST| Backend
+  Backend -->|PWA| Kiosk[Station Kiosks]
+```
+
+**Implementation Considerations:**
+
+* **Reliability:** Redundant SMS/IVR gateway providers to ensure > 99.5% delivery success.
+* **Latency:** Aim for sub-30-second propagation from status change to SMS/IVR update.
+* **Localization:** Regular audits to verify accuracy of regional language translations and audio prompts.
+
+**Success Indicators:**
+
+* SMS delivery rate > 98%.
+* IVR call completion rate > 90%.
+* Kiosk uptime ≥ 99%; average user session length ≥ 3 minutes.
+* Passenger satisfaction score for information availability ≥ 4.5/5.
+
+### 4.4 SafeHer (Women’s Safety Ecosystem)
+
+**Purpose:** Enhance security and confidence for women travelers through monitoring and community support.
+**Services & UI:**
+
+* **Wearable Panic Device:** Paired via Bluetooth to the passenger app; single-press SOS with location tagging.
+* **CCTV Analytics Feed:** Edge-AI flags suspicious behavior (loitering, crowding) and streams snapshots.
+* **Safe-Coach Allocation:** Automated seat and coach assignments placing women-only coaches near guard cabins.
+* **Volunteer Escort Scheduling:** Map-based interface for volunteers to accept and track escort requests in real time.
+
+**Data Sources:** BLE wearables, CCTV streams, guard roster API.
+**Integration Points:** Edge AI servers; volunteer mobile app; operations console.
+
+---
+
+### 4.5 HomeID (Platform Homelessness & Vulnerability)
+
+**Purpose:** Provide a holistic digital support system to platform dwellers—enabling identity verification, access to welfare schemes, tele-health services, and educational opportunities—thus improving quality of life and socio-economic outcomes.
+
+**Key Services & UI Components:**
+
+1. **e-KYC & Digital ID Onboarding**
+
+   * **Offline-Capable PWA Form:** Collects Aadhaar or alternate IDs, captures photo/biometrics, and syncs with NGO verification workflows when connectivity returns.
+   * **Verification Dashboard:** NGO workers can approve/reject applications, add field notes, and flag high-priority cases.
+
+2. **Welfare & Benefits Portal**
+
+   * **Scheme Matcher:** Automatically lists government programs (e.g., food rations, health insurance, skill training) based on the individual’s profile and eligibility.
+   * **Application Tracker:** Status updates on benefit disbursements, appointment dates, and document submission reminders.
+
+3. **Tele-Health & Counseling Interface**
+
+   * **Appointment Scheduler:** Book virtual consultations with partnered clinics; view upcoming sessions in a calendar view.
+   * **Session Console:** Embedded Jitsi Meet window with secure chat, prescription upload, and follow-up reminders.
+
+4. **E-Learning & Skill Development Hub**
+
+   * **Content Library:** Downloadable video and text tutorials in multiple languages covering basic literacy, vocational skills, and health education.
+   * **Progress Tracker:** Gamified progress bars and badges; daily login streaks incentivize continued learning.
+
+5. **Case Management & Reporting**
+
+   * **Worker Dashboard:** Social workers and station staff can view assigned cases, add field updates, and escalate critical issues.
+   * **Analytics Reports:** Heatmaps of vulnerable populations by station, service utilization metrics, and outcome tracking.
+
+**Data Sources & Integration:**
+
+* **Aadhaar Gateway / NGO APIs:** Secure fetch and sync of identity documents and verification statuses.
+* **Station Wi-Fi Logs:** Determine online/offline status for PWA sync scheduling.
+* **Moodle/LMS Backend:** Host and track e-learning content and user progress.
+* **Healthcare Partner API:** Appointments and consultation records.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Edge
+    Kiosk[PWA on Station Kiosk]
+    Mobile[PWA on Volunteer Device]
+  end
+  Kiosk -->|REST Sync| HomeIDService[RailCare HomeID Service]
+  Mobile -->|REST| HomeIDService
+  HomeIDService --> DB[(PostgreSQL)]
+  HomeIDService --> NGOApi[NGO Verification API]
+  HomeIDService --> Aadhaar[Aadhaar Gateway]
+  HomeIDService --> LMS[Moodle Backend]
+  HomeIDService --> Jitsi[Jitsi Meet Server]
+```
+
+**Implementation Considerations:**
+
+* **Privacy & Consent:** Data collection with explicit user consent; encryption of personal data at rest and in transit.
+* **Offline Resilience:** PWA local storage of form submissions and learning content, with sync retries.
+* **Localization:** UI/UX optimized for low-literacy users; audio prompts and iconography.
+
+**Success Indicators:**
+
+* **Onboarded Users:** ≥ 10,000 platform dwellers with verified digital IDs within 6 months.
+* **Service Utilization:** ≥ 70% of onboarded users accessing at least one welfare or health service monthly.
+* **Learning Outcomes:** Average course completion rate ≥ 50%; positive user feedback score ≥ 4/5.
+
+---
+
+### 4.6 FlexiFare (Ticketless Travel Due to Economic Desperation)
+
+**Purpose:** Enable fare credit and flexible repayment for low-income commuters.
+**Services & UI:**
+
+* **Credit Application:** Short form with alternative data inputs (phone bill, utility usage).
+* **Employer Portal:** Bulk issuance of credits tied to payroll deduction schedules.
+* **UPI/Wallet Payment:** One-click fare payment with pay-later toggle.
+* **Repayment Dashboard:** Shows upcoming deductions, past payments, and late-fee warnings.
+
+**Data Sources:** Phone usage, utility records, employer HR systems.
+**Integration Points:** UPI gateway; employer payroll APIs; credit scoring microservice.
+
+---
+
+### 4.7 SafeServe (Contaminated Food & Water Crisis)
+
+**Purpose:** Monitor, analyze, and ensure the safety of food and drinking water at stations and on trains, preventing illnesses by providing transparent, real-time quality information and traceability.
+
+**Key Services & UI Components:**
+
+1. **Sensor Dashboard & Alerts**
+
+   * **Live Metrics Panel:** Displays real-time readings of Total Dissolved Solids (TDS), pH level, bacterial counts (e.g., E. coli), temperature, and humidity for each water tap and food preparation zone.
+   * **Threshold Alerts:** Configurable alert levels trigger visual (dashboard color change) and automated notifications (email/SMS to station staff) when readings cross safety thresholds.
+
+2. **Vendor Registry & Certification**
+
+   * **Onboarding Workflow:** Vendor PWA form collects business license, food safety certificates, hygiene audit reports, and periodic self-inspection logs.
+   * **Certification Status Tile:** UI card showing current certification validity, next audit date, and compliance score.
+
+3. **Blockchain Audit Trail**
+
+   * **Immutable Records:** Each inspection, sensor reading batch, lab test result, and passenger feedback submission is written as a transaction on Hyperledger Fabric, ensuring tamper-proof traceability.
+   * **Audit Viewer:** Admin panel to query ledger history by vendor, date range, or incident type.
+
+4. **Passenger QR Scanner**
+
+   * **In-App Scanner:** Travelers use the passenger app to scan QR codes at water taps and vendor stalls, instantly viewing the latest safety grade, last inspection timestamp, and summary of recent sensor readings.
+   * **Feedback Submission:** Post-scan prompt allows users to rate quality and report observed issues (e.g., murky water, unclean utensils).
+
+5. **Analytics & Reporting**
+
+   * **Heatmaps & Trends:** Visualize contamination hotspots across the network and track improvements over time.
+   * **Monthly Compliance Reports:** Automatically generated PDFs summarizing station-wise safety metrics, vendor performance, and key incidents for regulatory review.
+
+**Data Sources & Integration:**
+
+* **IoT Sensor Array:** Arduino/ESP32 modules with TDS, pH, turbidity, and temperature sensors connected via MQTT to the event bus.
+* **Laboratory Test Results:** Periodic batch uploads from accredited labs via secure REST API.
+* **Passenger Feedback:** Crowdsourced ratings submitted through the mobile app, ingested via GraphQL.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Edge
+    Sensors[Water & Food Sensors]
+    VendorPWA[Vendor PWA]
+  end
+  Sensors -->|MQTT| KafkaBus[Kafka]
+  VendorPWA -->|REST| SafeServeService[RailCare SafeServe Service]
+  SafeServeService -->|Write| Blockchain[Hyperledger Fabric]
+  KafkaBus -->|Stream| Analytics[Stream Processor]
+  Analytics --> DB[(PostgreSQL+TimescaleDB)]
+  SafeServeService -->|GraphQL| PassengerApp[Mobile & Web App]
+  SafeServeService -->|REST| AdminConsole[Station Staff Dashboard]
+```
+
+**Implementation Considerations:**
+
+* **Calibration & Maintenance:** Regular calibration schedules for sensors and maintenance protocols to prevent drift.
+* **Data Integrity:** Local edge buffering of sensor data for up to 24 hours if connectivity fails, with guaranteed once-only delivery.
+* **Privacy & Security:** Encryption of all data at rest and in transit; role-based access controls for vendor PII.
+
+**Success Indicators:**
+
+* **Contamination Incident Reduction:** ≥ 80% drop in positive contamination readings within 6 months of deployment.
+* **User Engagement:** ≥ 100,000 QR scans per month across network.
+* **Vendor Compliance Rate:** ≥ 95% of registered vendors maintaining valid certification and passing quarterly audits.
+
+---
+
+### 4.8 TrackGuard (Suicide Prevention on Railway Tracks)
+
+**Purpose:** Identify individuals exhibiting high-risk behaviors near railway tracks and enable timely, compassionate intervention through automated alerts and human outreach.
+
+**Key Services & UI Components:**
+
+1. **Behavior Detection Interface**
+
+   * **Live Video Feed:** High-resolution CCTV and track-side camera streams displayed in the dashboard.
+   * **AI Overlay:** Bounding boxes and risk-level indicators (e.g., loitering, prone posture, sudden track entry) rendered in real time.
+   * **Confidence Scores:** Hover reveals model confidence and behavioral patterns detected (e.g., pacing, sitting on rails).
+
+2. **Automated Alert Dispatch**
+
+   * **Tiered Alerting:**
+
+     * **Warning Alerts:** Low-risk behaviors (e.g., loitering) trigger text notifications to station staff.
+     * **Critical Alerts:** High-risk detections (e.g., lying on tracks) initiate SMS/voice calls to on-duty staff and mental-health volunteers.
+   * **Geo-Tagged Alerts:** Includes precise camera ID, timestamp, and GPS coordinates for rapid response.
+
+3. **Crisis Counseling & Outreach Console**
+
+   * **Volunteer App Integration:** Volunteers receive push notifications with incident details and can accept outreach assignments.
+   * **Call & Chat Toolkit:** In-app VoIP and SMS channels let volunteers initiate empathetic conversations with spotters or nearby individuals.
+   * **Follow-Up Scheduling:** Schedule and log subsequent check-ins with at-risk individuals over days or weeks.
+
+4. **Analytics & Heatmap Visualization**
+
+   * **Incident Heatmap:** Displays spatial density of behavioral alerts across station and track segments; filterable by date and time.
+   * **Trend Reports:** Graphs showing monthly incident counts, peak hours, and seasonality to inform preventive infrastructure planning.
+
+5. **Case Management & Escalation Workflow**
+
+   * **Incident Records:** Each alert auto-creates a case with status (open, in-progress, resolved), assigned personnel, and resolution notes.
+   * **Escalation Rules:** Unanswered critical alerts escalate to higher-level supervisors and regional mental health helplines after configurable timeouts.
+
+**Data Sources & Integration:**
+
+* **CCTV/Track Cameras:** High-FPS video streams connected to edge inference devices (e.g., NVIDIA Jetson).
+* **Edge AI Inference Logs:** Local processing logs sent to central analytics via Kafka for persistence and trend analysis.
+* **Volunteer Response Records:** Acceptance, call duration, and outcome logs from the volunteer mobile app.
+
+**Technical Architecture:**
+
+```mermaid
+graph LR
+  subgraph Edge
+    Cameras[CCTV & Track Cameras]
+    Jetson[Edge AI Device]
+  end
+  Cameras -->|RTSP| Jetson
+  Jetson -->|TensorFlow Lite| Detection[Behavior Detection Model]
+  Detection -->|Kafka| EventBus[Kafka]
+  EventBus -->|REST| AlertService[RailCare TrackGuard Service]
+  AlertService -->|SMS/Voice| CommGateway[Telecom Gateway]
+  AlertService -->|WebSocket| Dashboard[Staff & Volunteer UI]
+  AlertService -->|DB| DB[(PostgreSQL)]
+  Dashboard -->|REST| CaseMgmt[Case Management Module]
+```
+
+**Implementation Considerations:**
+
+* **Privacy & Ethics:** Ensure AI models minimize false positives and respect privacy (e.g., blur non-relevant individuals).
+* **Latency:** Edge inference target < 200ms per frame to detect fast-moving events.
+* **Reliability:** Dual-feed failover cameras and redundant alert paths to maintain > 99% uptime.
+
+**Success Indicators:**
+
+* **Detection Accuracy:** Precision ≥ 92% and recall ≥ 85% for high-risk behaviors.
+* **Average Response Time:** Time from critical alert to first human outreach < 2 minutes.
+* **Incident Resolution Rate:** ≥ 90% of cases resolved or escalated according to workflow within 24 hours.
+
+---
