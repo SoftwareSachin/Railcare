@@ -329,6 +329,119 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Indian Railways API endpoints for real-time data
+  app.get("/api/live/train/:trainNumber/status", async (req, res) => {
+    try {
+      const { trainNumber } = req.params;
+      const { date } = req.query;
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const trainStatus = await indianRailAPI.getTrainStatus(
+        trainNumber, 
+        date as string
+      );
+      
+      res.json(trainStatus);
+    } catch (error) {
+      console.error("Error fetching live train status:", error);
+      res.status(500).json({ message: "Failed to fetch live train status" });
+    }
+  });
+
+  app.get("/api/live/train/:trainNumber/route", async (req, res) => {
+    try {
+      const { trainNumber } = req.params;
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const trainRoute = await indianRailAPI.getTrainRoute(trainNumber);
+      
+      res.json(trainRoute);
+    } catch (error) {
+      console.error("Error fetching train route:", error);
+      res.status(500).json({ message: "Failed to fetch train route" });
+    }
+  });
+
+  app.get("/api/live/station/:stationCode", async (req, res) => {
+    try {
+      const { stationCode } = req.params;
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const stationInfo = await indianRailAPI.getStationInfo(stationCode);
+      
+      res.json(stationInfo);
+    } catch (error) {
+      console.error("Error fetching station info:", error);
+      res.status(500).json({ message: "Failed to fetch station info" });
+    }
+  });
+
+  app.get("/api/live/station/:stationCode/trains", async (req, res) => {
+    try {
+      const { stationCode } = req.params;
+      const { hours } = req.query;
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const trainsAtStation = await indianRailAPI.getTrainsAtStation(
+        stationCode, 
+        hours ? parseInt(hours as string) : 2
+      );
+      
+      res.json(trainsAtStation);
+    } catch (error) {
+      console.error("Error fetching trains at station:", error);
+      res.status(500).json({ message: "Failed to fetch trains at station" });
+    }
+  });
+
+  app.get("/api/live/pnr/:pnrNumber", async (req, res) => {
+    try {
+      const { pnrNumber } = req.params;
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const pnrStatus = await indianRailAPI.getPNRStatus(pnrNumber);
+      
+      res.json(pnrStatus);
+    } catch (error) {
+      console.error("Error fetching PNR status:", error);
+      res.status(500).json({ message: "Failed to fetch PNR status" });
+    }
+  });
+
+  app.get("/api/live/trains/search", async (req, res) => {
+    try {
+      const { from, to, date } = req.query;
+      
+      if (!from || !to) {
+        return res.status(400).json({ message: "From and to station codes are required" });
+      }
+      
+      const { indianRailAPI } = await import("./indianRailApi");
+      const trains = await indianRailAPI.searchTrains(
+        from as string, 
+        to as string, 
+        date as string
+      );
+      
+      res.json(trains);
+    } catch (error) {
+      console.error("Error searching trains:", error);
+      res.status(500).json({ message: "Failed to search trains" });
+    }
+  });
+
+  app.get("/api/live/stations/all", async (req, res) => {
+    try {
+      const { indianRailAPI } = await import("./indianRailApi");
+      const stations = await indianRailAPI.getAllStations();
+      
+      res.json(stations);
+    } catch (error) {
+      console.error("Error fetching all stations:", error);
+      res.status(500).json({ message: "Failed to fetch all stations" });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time updates
