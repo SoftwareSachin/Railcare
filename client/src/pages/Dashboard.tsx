@@ -10,6 +10,7 @@ import StationMap from "@/components/StationMap";
 import AlertsPanel from "@/components/AlertsPanel";
 import CrowdFlowAnalytics from "@/components/CrowdFlowAnalytics";
 import ModuleCards from "@/components/ModuleCards";
+import LiveTrainDashboard from "@/components/LiveTrainDashboard";
 import type { DashboardStats, WebSocketMessage, Alert } from "@/types";
 
 export default function Dashboard() {
@@ -144,8 +145,11 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Right Sidebar - Alerts and Activities */}
+            {/* Right Sidebar - Alerts and Live Train Data */}
             <div className="space-y-6">
+              {/* Live Train Tracking for all users */}
+              <LiveTrainDashboard />
+              
               <AlertsPanel 
                 alerts={alerts || []} 
                 userRole={user.role}

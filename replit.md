@@ -89,6 +89,12 @@ Eight integrated service modules:
 - **express & express-session**: Web server and session management
 - **ws**: WebSocket server implementation
 
+### Real-time Data Integration
+- **Indian Railways API**: Live train status, station information, and PNR checking
+- **API Endpoints**: `/api/live/train/:trainNumber/status`, `/api/live/station/:stationCode`, `/api/live/pnr/:pnrNumber`
+- **Auto-refresh**: Train status updates every 30 seconds, station data every minute
+- **Featured Trains**: Real-time tracking of Rajdhani, Shatabdi, and Vande Bharat trains
+
 ### UI Dependencies
 - **@radix-ui/***: Accessible component primitives
 - **tailwindcss**: Utility-first CSS framework
@@ -122,6 +128,10 @@ Eight integrated service modules:
 
 ## Changelog
 - June 30, 2025. Initial setup
+- June 30, 2025. Integrated Indian Railways API for real-time train and station data
+- June 30, 2025. Added live train status tracking with automatic 30-second updates
+- June 30, 2025. Implemented PNR status checking and station information modules
+- June 30, 2025. Enhanced IRCTC-themed UI with official navy blue and orange colors
 
 ## User Preferences
 
