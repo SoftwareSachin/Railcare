@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-// Base URL for Indian Rail API
-const INDIAN_RAIL_API_BASE = "https://indianrailapi.com/api/v2";
+// Base URL for Indian Rail API (Updated to correct endpoint)
+const INDIAN_RAIL_API_BASE = "https://indianrailapi.com/api/v2/TrainDetails";
 
 // API schemas for type safety
 const TrainStatusSchema = z.object({
