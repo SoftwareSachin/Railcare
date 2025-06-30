@@ -150,21 +150,21 @@ export default function Sidebar({ user }: SidebarProps) {
   };
 
   return (
-    <div className="bg-white shadow-lg w-80 flex-shrink-0 overflow-y-auto custom-scrollbar">
-      {/* User Profile Section */}
-      <div className="p-6 border-b border-gray-200">
+    <div className="bg-irctc-navy shadow-lg w-80 flex-shrink-0 overflow-y-auto custom-scrollbar">
+      {/* User Profile Section - IRCTC Style */}
+      <div className="p-6 border-b border-white/10">
         <div className="flex items-center space-x-4">
           <Avatar className="w-12 h-12">
             <AvatarImage src={user.profileImageUrl} alt={user.name} className="object-cover" />
-            <AvatarFallback className="bg-railway-blue text-white">
+            <AvatarFallback className="bg-irctc-orange text-white">
               {getUserInitials()}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-gray-900 truncate">{user.name}</h3>
-            <p className="text-sm text-gray-600">{getRoleDisplay()}</p>
+            <h3 className="font-medium text-white truncate">{user.name}</h3>
+            <p className="text-sm text-white/80">{getRoleDisplay()}</p>
             {user.aadhaarNumber && (
-              <p className="text-xs text-gray-500 font-mono">
+              <p className="text-xs text-white/60 font-mono">
                 ID: {user.aadhaarNumber.slice(0, 4)}****{user.aadhaarNumber.slice(-4)}
               </p>
             )}
@@ -172,7 +172,7 @@ export default function Sidebar({ user }: SidebarProps) {
         </div>
         <div className="mt-4 flex items-center justify-between">
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-24">
+            <SelectTrigger className="w-24 bg-white/10 border-white/20 text-white">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -188,6 +188,7 @@ export default function Sidebar({ user }: SidebarProps) {
             size="sm"
             onClick={() => logoutMutation.mutate()}
             disabled={logoutMutation.isPending}
+            className="text-white hover:bg-white/10"
           >
             <i className="fas fa-sign-out-alt"></i>
           </Button>
@@ -200,7 +201,7 @@ export default function Sidebar({ user }: SidebarProps) {
           {/* Dashboard */}
           <Link href="/">
             <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-              location === '/' ? 'bg-railway-blue text-white' : 'text-gray-700 hover:bg-gray-100'
+              location === '/' ? 'bg-irctc-orange text-white' : 'text-white/80 hover:bg-white/10'
             }`}>
               <i className="fas fa-tachometer-alt w-5"></i>
               <span>Dashboard</span>
@@ -210,18 +211,18 @@ export default function Sidebar({ user }: SidebarProps) {
           {/* Safety & Operations Group */}
           {safetyItems.length > 0 && (
             <div className="pt-4">
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
                 Safety & Operations
               </h4>
               {safetyItems.map((item) => (
                 <Link key={item.id} href={item.path}>
                   <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    location === item.path ? 'bg-railway-blue text-white' : 'text-gray-700 hover:bg-gray-100'
+                    location === item.path ? 'bg-irctc-orange text-white' : 'text-white/80 hover:bg-white/10'
                   }`}>
-                    <i className={`${item.icon} w-5 ${item.color || ''}`}></i>
+                    <i className={`${item.icon} w-5 text-white`}></i>
                     <span>{item.label}</span>
                     {item.badge && (
-                      <span className="ml-auto bg-alert-orange text-white text-xs px-2 py-1 rounded-full">
+                      <span className="ml-auto bg-irctc-orange text-white text-xs px-2 py-1 rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -234,15 +235,15 @@ export default function Sidebar({ user }: SidebarProps) {
           {/* Information & Services Group */}
           {serviceItems.length > 0 && (
             <div className="pt-4">
-              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              <h4 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
                 Information & Services
               </h4>
               {serviceItems.map((item) => (
                 <Link key={item.id} href={item.path}>
                   <div className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                    location === item.path ? 'bg-railway-blue text-white' : 'text-gray-700 hover:bg-gray-100'
+                    location === item.path ? 'bg-irctc-orange text-white' : 'text-white/80 hover:bg-white/10'
                   }`}>
-                    <i className={`${item.icon} w-5 ${item.color || ''}`}></i>
+                    <i className={`${item.icon} w-5 text-white`}></i>
                     <span>{item.label}</span>
                   </div>
                 </Link>

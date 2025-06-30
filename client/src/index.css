@@ -5,51 +5,55 @@
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(240, 10%, 3.9%);
-  --muted: hsl(240, 4.8%, 95.9%);
+  --muted: hsl(216, 10%, 96%);
   --muted-foreground: hsl(240, 3.7%, 45.1%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(240, 10%, 3.9%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(240, 10%, 3.9%);
-  --border: hsl(240, 5.9%, 90%);
-  --input: hsl(240, 5.9%, 90%);
-  --primary: hsl(207, 90%, 54%);
+  --border: hsl(216, 13%, 90%);
+  --input: hsl(216, 13%, 90%);
+  --primary: hsl(240, 100%, 23%);
   --primary-foreground: hsl(0, 0%, 98%);
-  --secondary: hsl(240, 4.8%, 95.9%);
+  --secondary: hsl(216, 10%, 96%);
   --secondary-foreground: hsl(240, 5.9%, 10%);
-  --accent: hsl(240, 4.8%, 95.9%);
+  --accent: hsl(216, 10%, 96%);
   --accent-foreground: hsl(240, 5.9%, 10%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(0, 0%, 98%);
   --ring: hsl(240, 5%, 64.9%);
-  --radius: 0.5rem;
-  --sidebar-background: hsl(0, 0%, 98%);
-  --sidebar-foreground: hsl(240, 5.3%, 26.1%);
-  --sidebar-primary: hsl(240, 5.9%, 10%);
-  --sidebar-primary-foreground: hsl(0, 0%, 98%);
-  --sidebar-accent: hsl(240, 4.8%, 95.9%);
-  --sidebar-accent-foreground: hsl(240, 5.9%, 10%);
-  --sidebar-border: hsl(220, 13%, 91%);
-  --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+  --radius: 0.375rem;
+  --sidebar-background: hsl(240, 100%, 23%);
+  --sidebar-foreground: hsl(0, 0%, 98%);
+  --sidebar-primary: hsl(0, 0%, 98%);
+  --sidebar-primary-foreground: hsl(240, 100%, 23%);
+  --sidebar-accent: hsl(240, 100%, 27%);
+  --sidebar-accent-foreground: hsl(0, 0%, 98%);
+  --sidebar-border: hsl(240, 100%, 27%);
+  --sidebar-ring: hsl(240, 100%, 23%);
   
-  /* RailCare Custom Colors */
-  --railway-blue: hsl(210, 73%, 39%);
-  --railway-blue-foreground: hsl(0, 0%, 100%);
-  --safety-orange: hsl(32, 100%, 50%);
-  --safety-orange-foreground: hsl(0, 0%, 100%);
-  --safe-green: hsl(122, 39%, 49%);
-  --safe-green-foreground: hsl(0, 0%, 100%);
-  --alert-orange: hsl(36, 100%, 47%);
-  --alert-orange-foreground: hsl(0, 0%, 100%);
-  --danger-red: hsl(0, 65%, 51%);
-  --danger-red-foreground: hsl(0, 0%, 100%);
+  /* IRCTC Official Colors */
+  --irctc-navy: hsl(240, 100%, 23%); /* #000075 - Official IRCTC Navy Blue */
+  --irctc-navy-foreground: hsl(0, 0%, 100%);
+  --irctc-silver: hsl(270, 8%, 80%); /* #CCC7D2 - Official IRCTC Silver */
+  --irctc-silver-foreground: hsl(240, 10%, 3.9%);
+  --irctc-orange: hsl(25, 100%, 50%); /* Orange for buttons and highlights */
+  --irctc-orange-foreground: hsl(0, 0%, 100%);
+  --irctc-success: hsl(120, 60%, 45%);
+  --irctc-success-foreground: hsl(0, 0%, 100%);
+  --irctc-warning: hsl(45, 100%, 60%);
+  --irctc-warning-foreground: hsl(0, 0%, 0%);
+  --irctc-error: hsl(0, 65%, 51%);
+  --irctc-error-foreground: hsl(0, 0%, 100%);
+  --irctc-light-blue: hsl(210, 100%, 95%);
+  --irctc-light-gray: hsl(0, 0%, 97%);
 
-  /* Chart colors */
-  --chart-1: hsl(207, 90%, 54%);
-  --chart-2: hsl(122, 39%, 49%);
-  --chart-3: hsl(32, 100%, 50%);
+  /* Chart colors matching IRCTC theme */
+  --chart-1: hsl(240, 100%, 23%);
+  --chart-2: hsl(25, 100%, 50%);
+  --chart-3: hsl(120, 60%, 45%);
   --chart-4: hsl(0, 65%, 51%);
-  --chart-5: hsl(281, 83%, 47%);
+  --chart-5: hsl(45, 100%, 60%);
 }
 
 .dark {
@@ -94,29 +98,74 @@
 }
 
 @layer utilities {
+  /* IRCTC Brand Colors */
+  .text-irctc-navy {
+    color: hsl(240, 100%, 23%);
+  }
+  .bg-irctc-navy {
+    background-color: hsl(240, 100%, 23%);
+  }
+  .text-irctc-orange {
+    color: hsl(25, 100%, 50%);
+  }
+  .bg-irctc-orange {
+    background-color: hsl(25, 100%, 50%);
+  }
+  .text-irctc-silver {
+    color: hsl(270, 8%, 80%);
+  }
+  .bg-irctc-silver {
+    background-color: hsl(270, 8%, 80%);
+  }
+  .text-irctc-success {
+    color: hsl(120, 60%, 45%);
+  }
+  .bg-irctc-success {
+    background-color: hsl(120, 60%, 45%);
+  }
+  .text-irctc-warning {
+    color: hsl(45, 100%, 60%);
+  }
+  .bg-irctc-warning {
+    background-color: hsl(45, 100%, 60%);
+  }
+  .text-irctc-error {
+    color: hsl(0, 65%, 51%);
+  }
+  .bg-irctc-error {
+    background-color: hsl(0, 65%, 51%);
+  }
+  .bg-irctc-light-blue {
+    background-color: hsl(210, 100%, 95%);
+  }
+  .bg-irctc-light-gray {
+    background-color: hsl(0, 0%, 97%);
+  }
+  
+  /* Legacy color classes for backward compatibility */
   .text-railway-blue {
-    color: hsl(210, 73%, 39%);
+    color: hsl(240, 100%, 23%);
   }
   .bg-railway-blue {
-    background-color: hsl(210, 73%, 39%);
+    background-color: hsl(240, 100%, 23%);
   }
   .text-safety-orange {
-    color: hsl(32, 100%, 50%);
+    color: hsl(25, 100%, 50%);
   }
   .bg-safety-orange {
-    background-color: hsl(32, 100%, 50%);
+    background-color: hsl(25, 100%, 50%);
   }
   .text-safe-green {
-    color: hsl(122, 39%, 49%);
+    color: hsl(120, 60%, 45%);
   }
   .bg-safe-green {
-    background-color: hsl(122, 39%, 49%);
+    background-color: hsl(120, 60%, 45%);
   }
   .text-alert-orange {
-    color: hsl(36, 100%, 47%);
+    color: hsl(25, 100%, 50%);
   }
   .bg-alert-orange {
-    background-color: hsl(36, 100%, 47%);
+    background-color: hsl(25, 100%, 50%);
   }
   .text-danger-red {
     color: hsl(0, 65%, 51%);
@@ -127,6 +176,30 @@
   
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* IRCTC specific design patterns */
+  .irctc-button-primary {
+    background: linear-gradient(135deg, hsl(240, 100%, 23%) 0%, hsl(240, 100%, 30%) 100%);
+    border: 1px solid hsl(240, 100%, 20%);
+    box-shadow: 0 2px 4px rgba(0, 0, 117, 0.2);
+  }
+  .irctc-button-primary:hover {
+    background: linear-gradient(135deg, hsl(240, 100%, 20%) 0%, hsl(240, 100%, 27%) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 117, 0.3);
+  }
+  .irctc-button-secondary {
+    background: linear-gradient(135deg, hsl(25, 100%, 50%) 0%, hsl(25, 100%, 55%) 100%);
+    border: 1px solid hsl(25, 100%, 45%);
+    box-shadow: 0 2px 4px rgba(255, 127, 0, 0.2);
+  }
+  .irctc-button-secondary:hover {
+    background: linear-gradient(135deg, hsl(25, 100%, 45%) 0%, hsl(25, 100%, 50%) 100%);
+    box-shadow: 0 4px 8px rgba(255, 127, 0, 0.3);
+  }
+  .irctc-header-gradient {
+    background: linear-gradient(135deg, hsl(240, 100%, 23%) 0%, hsl(240, 100%, 30%) 100%);
+    border-bottom: 2px solid hsl(25, 100%, 50%);
   }
 }
 

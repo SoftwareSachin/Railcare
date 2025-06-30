@@ -81,7 +81,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-irctc-light-gray">
       <Sidebar user={user} />
       
       <div className="flex-1 flex flex-col overflow-hidden">

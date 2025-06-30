@@ -42,11 +42,11 @@ export default function Header({ user, selectedStationId, onStationChange }: Hea
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+    <header className="irctc-header-gradient shadow-sm border-b border-irctc-orange px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-bold text-gray-900">Operations Dashboard</h1>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-white">RailCare Operations Dashboard</h1>
+          <div className="flex items-center space-x-2 text-sm text-white/80">
             <i className="fas fa-clock"></i>
             <span>{formatTime(currentTime)}</span>
             <span className="mx-2">•</span>
